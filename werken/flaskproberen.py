@@ -35,7 +35,8 @@ def rankschikking():
     df = pd.read_csv(r'C:\Users\suzan\Documents\traineeship\data\Uitslag_alle_gemeenten_TK20210317.csv', sep=';')
     f = (df[['RegioNaam', 'VVD']])
     g = f.sort_values(by=['VVD'])
-    return str(g)
+    h = g.to_html()
+    return (h)
 
 
 
