@@ -66,16 +66,11 @@ def geldig2(gemeente='Oisterwijk'):
     rijgemeente = df[df['RegioNaam'] == gemeente].index[0]
     percentageongeldig = round((df.loc[rijgemeente, 'OngeldigeStemmen'] / df.loc[rijgemeente,'Opkomst']) * 100, 2)
     percentagegeldig = round((df.loc[rijgemeente, 'GeldigeStemmen'] / df.loc[rijgemeente, 'Opkomst']) * 100, 2)
-    #antwoord = gemeente + "<br>\n Percentage ongeldig: " + str(percentageongeldig) + "<br>\n Percentage geldig: " \
-    #           + str(percentagegeldig)
-    #return antwoord
     geldig2df = pd.DataFrame(data={'Gemeente': gemeente, 'Percentage Geldig': percentagegeldig,
                                    'Percentage Ongeldig': percentageongeldig}, index=["1"])
     geldig2html = geldig2df.to_html()
     return geldig2html
 
-#@app.route("/landelijkeuitslag",methods=['GET'])
-#def landelijke_uitslag():
 
 
 
