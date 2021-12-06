@@ -13,7 +13,6 @@ df2 = df[['RegioNaam', 'VVD', 'D66', 'PVV (Partij voor de Vrijheid)', 'CDA', 'SP
 
 # print(df2)
 
-# invoer 11 en 12 hebben nullen en nans
 invoer = int(input())  # je moet nu een getal invullen als invoer
 
 regionaam_invoer = df2.loc[invoer, 'RegioNaam']  # de regio die bij het ingevoerde nummer hoort
