@@ -3,24 +3,31 @@ df = pd.read_csv(r'C:\Users\suzan\Documents\traineeship\data\Uitslag_alle_gemeen
 
 # print(df.loc[4, 'VVD':'De Groenen'])
 
-df2 = df[['RegioNaam', 'VVD', 'D66', 'PVV (Partij voor de Vrijheid)', 'CDA', 'SP (Socialistische Partij)',
-          'Partij van de Arbeid (P.v.d.A.)', 'GROENLINKS', 'Forum voor Democratie', 'Partij voor de Dieren',
-          'ChristenUnie', 'Volt', 'JA21', 'Staatkundig Gereformeerde Partij (SGP)', 'DENK', '50PLUS', 'BBB',
-          'BIJ1', 'CODE ORANJE', 'NIDA', 'Splinter', 'Piratenpartij', 'JONG', 'Trots op Nederland (TROTS)',
-          'Lijst Henk Krol', 'NLBeter', 'Blanco (Zeven, A.J.L.B.)', 'LP (Libertaire Partij)', 'OPRECHT', 'JEZUS LEEFT',
-          'DE FEESTPARTIJ (DFP)', 'U-Buntu Connected Front', 'Vrij en Sociaal Nederland', 'Partij van de Eenheid',
-          'Wij zijn Nederland', 'Partij voor de Republiek', 'Modern Nederland', 'De Groenen']]  # dit is een dataframe
-
-# print(df2)
+#df2 = df[['RegioNaam', 'VVD', 'D66', 'PVV (Partij voor de Vrijheid)', 'CDA', 'SP (Socialistische Partij)',
+#          'Partij van de Arbeid (P.v.d.A.)', 'GROENLINKS', 'Forum voor Democratie', 'Partij voor de Dieren',
+#          'ChristenUnie', 'Volt', 'JA21', 'Staatkundig Gereformeerde Partij (SGP)', 'DENK', '50PLUS', 'BBB',
+#          'BIJ1', 'CODE ORANJE', 'NIDA', 'Splinter', 'Piratenpartij', 'JONG', 'Trots op Nederland (TROTS)',
+#          'Lijst Henk Krol', 'NLBeter', 'Blanco (Zeven, A.J.L.B.)', 'LP (Libertaire Partij)', 'OPRECHT', 'JEZUS LEEFT',
+#          'DE FEESTPARTIJ (DFP)', 'U-Buntu Connected Front', 'Vrij en Sociaal Nederland', 'Partij van de Eenheid',
+#          'Wij zijn Nederland', 'Partij voor de Republiek', 'Modern Nederland', 'De Groenen']]  # dit is een dataframe
+df4 = df.iloc[:, 0:1]
+df2 = df.iloc[:, 10:46]  # dit is ook een dataframe
+df5 = df4.append(df2)
+print(df5)
+print(df5.info)
+#print(df2.columns)
+#print(df2.info)
 
 invoer = int(input())  # je moet nu een getal invullen als invoer
+
+mogelijke_regionaam = list(df2.columns)
 
 regionaam_invoer = df2.loc[invoer, 'RegioNaam']  # de regio die bij het ingevoerde nummer hoort
 print('Regionaam: ' + regionaam_invoer)
 
 df3 = df2.loc[invoer, 'VVD':'De Groenen']
 # dit is nu een series, geeft de partijen en het aantal stemmen van deze regio
-# print(df3)
+print(df3)
 
 print('\nDeze partijen hebben 0 stemmen gekregen in '+regionaam_invoer + ':')
 for i, x in df3.iteritems():
