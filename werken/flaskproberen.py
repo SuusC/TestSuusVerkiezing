@@ -2,6 +2,7 @@ from flask import Flask
 import pandas as pd
 import landelijke_uitslag
 import provincie_stemmen
+import provincies_allemaal
 
 app = Flask(__name__)
 
@@ -85,7 +86,14 @@ def provincie_als_landelijk(provincie=''):
 #provincie_als_landelijk(provincie='')
 
 @app.route("/provincies",methods=['GET'])
-def provincies_allemaal():
+def provincies_allemaal3():
+    antwoord = provincies_allemaal.provincies_allemaal()
+    return antwoord.to_html()
+
+@app.route("/provincies/weging",methods=['GET'])
+def provincies_allemaal2(inputDrenthe=1, inputNoord_Holland=1, inputGelderland=1, inputFriesland=1, inputZuid_Holland=1,
+                            inputOverijssel=1, inputFlevoland=1, inputNoord_Brabant=1, inputUtrecht=1, inputGroningen=1,
+                            inputLimburg=1, inputZeeland=1):
     df_landelijk = pd.read_csv(r'C:\Users\suzan\Documents\traineeship\data\Uitslag_alle_gemeenten_TK20210317.csv', sep=';')
     df_provincies = pd.read_excel(r'C:\Users\suzan\Documents\traineeship\data\Gemeenten alfabetisch 2019.xls')
     provincie_lijst = list(df_provincies['Provincienaam'].unique())
@@ -93,20 +101,33 @@ def provincies_allemaal():
     for provincie in provincie_lijst:
         tijdelijk_df = landelijke_uitslag.landelijke_uitslag(provincie_stemmen.provincie_stemmen(provincie))
         #df_renamed_provincie = tijdelijk_df.rename(columns={'stemmen': 'stemmen in ' + provincie, 'zetels': 'zetels in ' +provincie})
-        df_renamed_provincie = tijdelijk_df.rename(columns={'zetels': 'zetels in ' + provincie})
-        df_renamed_provincie = df_renamed_provincie.iloc[:,1]
+        df_renamed_provincie = tijdelijk_df.rename(columns={'stemmen': 'stemmen in ' + provincie})
+        df_renamed_provincie = df_renamed_provincie.iloc[:,0]
         totaalDF = totaalDF.merge(df_renamed_provincie, how='outer', left_index=True, right_index=True)
     df_landelijke_uitslag = landelijke_uitslag.landelijke_uitslag(df_landelijk)
-    df_renamed_landelijk = df_landelijke_uitslag.rename(columns={'zetels': 'zetels landelijk'})
-    df_renamed_landelijk = df_renamed_landelijk.iloc[:,1]
+    df_renamed_landelijk = df_landelijke_uitslag.rename(columns={'stemmen': 'stemmen landelijk'})
+    df_renamed_landelijk = df_renamed_landelijk.iloc[:,0]
     totaalDF2 = totaalDF.merge(df_renamed_landelijk, how='outer', left_index=True, right_index=True)
-    totaalDF_sorteer = totaalDF2.sort_values(by= 'zetels landelijk', ascending=False)
-    return totaalDF_sorteer.to_html()
+    totaalDF_sorteer = totaalDF2.sort_values(by= 'stemmen landelijk', ascending=False)
+    totaalstemmen_perkolom = totaalDF_sorteer.sum()
+    gewichten_series = totaalstemmen_perkolom/totaalstemmen_perkolom[12]
+    gewichten_series_zonder_landelijk = gewichten_series[:12]
+    series_input_wegingen = pd.Series([inputDrenthe, inputNoord_Holland, inputGelderland, inputFriesland, inputZuid_Holland,
+                            inputOverijssel, inputFlevoland, inputNoord_Brabant, inputUtrecht, inputGroningen,
+                            inputLimburg, inputZeeland], index=gewichten_series_zonder_landelijk.index)
+    #print(series_input_wegingen)
+    gewichten_series_keer_inputwegingen = gewichten_series_zonder_landelijk*series_input_wegingen
+    print(gewichten_series_keer_inputwegingen)
 
-
-
-
-
+    df_provincies = provincies_allemaal.provincies_allemaal()
+    df_provincies_zonder_landelijk = df_provincies.iloc[:,:12]
+    test = df_provincies_zonder_landelijk.dot(gewichten_series_keer_inputwegingen.to_numpy())
+    test2 = test.to_frame()
+    test3 = test2/test2.sum()*150
+    print(test3)
+    #print(test3.sum())
+    return(test3.to_html())
+provincies_allemaal2(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 
 
 if __name__ == '__main__':

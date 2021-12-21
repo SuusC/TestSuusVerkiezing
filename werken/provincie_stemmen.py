@@ -11,8 +11,10 @@ def provincie_stemmen(provincie):
     #print(prov_gem_df)
 
     df_merge = pd.merge(df_uitslagen, df_provincies, how='left', left_on=['RegioNaam'], right_on=['Gemeentenaam'])
-    #print(df_met_provincies)
+
+    #print(df_merge)
 
     df_provincie = df_merge[df_merge['Provincienaam'] == provincie ]
     df_provincie2 = df_provincie.iloc[:,0:47]
     return df_provincie2
+
